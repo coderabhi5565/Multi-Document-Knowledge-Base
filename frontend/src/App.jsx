@@ -11,6 +11,209 @@ function App() {
     { name: "employee_handbook.pdf", type: "PDF", status: "Ready" },
     { name: "engineering_guidelines.docx", type: "DOCX", status: "Ready" },
     { name: "api_documentation.txt", type: "TXT", status: "Ready" },
+    { name: "https://example.com/docs", type: "URL", status: "Ready" }
+  ]);
+
+  // Mock chat state
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [sources, setSources] = useState([]);
+
+  const handleAsk = () => {
+    // In a real app this would call the backend
+    setAnswer(
+      "Customers can request a refund within 30 days of purchase, subject to the applicable terms and conditions."
+    );
+    setSources([
+      { source: "refund_policy.pdf", detail: "Page 4" },
+      { source: "enterprise_terms.docx", detail: "Section: Refunds" }
+    ]);
+  };
+
+  return (
+    <div className="app-container">
+      <Header />
+      <main className="main-content">
+        <UploadSection />
+        <DocumentsSection documents={documents} />
+        <ChatSection
+          question={question}
+          setQuestion={setQuestion}
+          onAsk={handleAsk}
+          answer={answer}
+          sources={sources}
+        />
+      </main>
+    </div>
+  );
+}
+
+export default App;
+
+import Header from "./components/Header";
+import UploadSection from "./components/UploadSection";
+import DocumentsSection from "./components/DocumentsSection";
+import ChatSection from "./components/ChatSection";
+import "./App.css";
+
+function App() {
+  // Mock document data
+  const [documents, setDocuments] = useState([
+    { name: "employee_handbook.pdf", type: "PDF", status: "Ready" },
+    { name: "engineering_guidelines.docx", type: "DOCX", status: "Ready" },
+    { name: "api_documentation.txt", type: "TXT", status: "Ready" },
+    { name: "https://example.com/docs", type: "URL", status: "Ready" }
+  ]);
+
+  // Mock chat state
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [sources, setSources] = useState([]);
+
+  const handleAsk = () => {
+    // In a real app this would call the backend
+    setAnswer(
+      "Customers can request a refund within 30 days of purchase, subject to the applicable terms and conditions."
+    );
+    setSources([
+      { source: "refund_policy.pdf", detail: "Page 4" },
+      { source: "enterprise_terms.docx", detail: "Section: Refunds" }
+    ]);
+  };
+
+  return (
+    <div className="app-container">
+      <Header />
+      <main className="main-content">
+        <UploadSection />
+        <DocumentsSection documents={documents} />
+        <ChatSection
+          question={question}
+          setQuestion={setQuestion}
+          onAsk={handleAsk}
+          answer={answer}
+          sources={sources}
+        />
+      </main>
+    </div>
+  );
+}
+
+export default App;
+import Header from "./components/Header";
+import UploadSection from "./components/UploadSection";
+import DocumentsSection from "./components/DocumentsSection";
+import ChatSection from "./components/ChatSection";
+import "./App.css";
+
+function App() {
+  // Mock document data
+  const [documents, setDocuments] = useState([
+    { name: "employee_handbook.pdf", type: "PDF", status: "Ready" },
+    { name: "engineering_guidelines.docx", type: "DOCX", status: "Ready" },
+    { name: "api_documentation.txt", type: "TXT", status: "Ready" },
+    { name: "https://example.com/docs", type: "URL", status: "Ready" },
+  ]);
+
+  // Mock chat state
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [sources, setSources] = useState([]);
+
+  const handleAsk = () => {
+    // In a real app this would call the backend
+    setAnswer(
+      "Customers can request a refund within 30 days of purchase, subject to the applicable terms and conditions."
+    );
+    setSources([
+      { source: "refund_policy.pdf", detail: "Page 4" },
+      { source: "enterprise_terms.docx", detail: "Section: Refunds" },
+    ]);
+  };
+
+  return (
+    <div className="app-container">
+      <Header />
+      <main className="main-content">
+        <UploadSection />
+        <DocumentsSection documents={documents} />
+        <ChatSection
+          question={question}
+          setQuestion={setQuestion}
+          onAsk={handleAsk}
+          answer={answer}
+          sources={sources}
+        />
+      </main>
+    </div>
+  );
+}
+
+export default App;
+
+import Header from "./components/Header";
+import UploadSection from "./components/UploadSection";
+import DocumentsSection from "./components/DocumentsSection";
+import ChatSection from "./components/ChatSection";
+import "./App.css";
+
+function App() {
+  // Mock document data
+  const [documents, setDocuments] = useState([
+    { name: "employee_handbook.pdf", type: "PDF", status: "Ready" },
+    { name: "engineering_guidelines.docx", type: "DOCX", status: "Ready" },
+    { name: "api_documentation.txt", type: "TXT", status: "Ready" },
+    { name: "https://example.com/docs", type: "URL", status: "Ready" },
+  ]);
+
+  // Mock chat state
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [sources, setSources] = useState([]);
+
+  const handleAsk = () => {
+    // In a real app this would call the backend
+    setAnswer(
+      "Customers can request a refund within 30 days of purchase, subject to the applicable terms and conditions."
+    );
+    setSources([
+      { source: "refund_policy.pdf", detail: "Page 4" },
+      { source: "enterprise_terms.docx", detail: "Section: Refunds" },
+    ]);
+  };
+
+  return (
+    <div className="app-container">
+      <Header />
+      <main className="main-content">
+        <UploadSection />
+        <DocumentsSection documents={documents} />
+        <ChatSection
+          question={question}
+          setQuestion={setQuestion}
+          onAsk={handleAsk}
+          answer={answer}
+          sources={sources}
+        />
+      </main>
+    </div>
+  );
+}
+
+export default App;
+
+import Header from "./components/Header";
+import UploadSection from "./components/UploadSection";
+import DocumentsSection from "./components/DocumentsSection";
+import ChatSection from "./components/ChatSection";
+import "./App.css";
+
+function App() {
+  // Mock document data
+  const [documents, setDocuments] = useState([
+    { name: "employee_handbook.pdf", type: "PDF", status: "Ready" },
+    { name: "engineering_guidelines.docx", type: "DOCX", status: "Ready" },
+    { name: "api_documentation.txt", type: "TXT", status: "Ready" },
     { name: "https://example.com/docs", type: "URL", status: "Ready" },
   ]);
 

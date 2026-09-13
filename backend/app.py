@@ -1,11 +1,15 @@
 from io import BytesIO
+from uuid import uuid4
 
 import httpx
 from bs4 import BeautifulSoup
 from docx import Document
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from PyPDF2 import PdfReader
+from llama_index.embeddings.openai import OpenAIEmbedding
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from PyPDF2 import PdfReader
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, PointStruct, VectorParams
 
 
 app = FastAPI()
@@ -15,6 +19,62 @@ splitter = RecursiveCharacterTextSplitter(
     chunk_size=1000,
     chunk_overlap=200
 )
+
+
+qdrant_client = QdrantClient(
+    host="localhost",
+    port=6333
+)
+
+
+embed_model = OpenAIEmbedding(
+    model="text-embedding-3-small"
+)
+
+
+embedding_dimension = len(
+    embed_model.get_text_embedding("dimension check")
+)
+
+
+if not qdrant_client.collection_exists("knowledge_base"):
+    qdrant_client.create_collection(
+        collection_name="knowledge_base",
+        vectors_config=VectorParams(
+            size=embedding_dimension,
+            distance=Distance.COSINE
+        )
+    )
+
+
+def store_documents(documents):
+
+    points = []
+
+    for document in documents:
+
+        vector = embed_model.get_text_embedding(
+            document["text"]
+        )
+
+        points.append(
+            PointStruct(
+                id=str(uuid4()),
+                vector=vector,
+                payload={
+                    "text": document["text"],
+                    "metadata": document["metadata"]
+                }
+            )
+        )
+
+    if points:
+        qdrant_client.upsert(
+            collection_name="knowledge_base",
+            points=points
+        )
+
+    return len(points)
 
 
 @app.get("/")
@@ -39,9 +99,11 @@ async def upload_document(file: UploadFile = File(...)):
             text = page.extract_text()
 
             if text:
+
                 chunks = splitter.split_text(text)
 
                 for chunk in chunks:
+
                     documents.append({
                         "text": chunk,
                         "metadata": {
@@ -65,6 +127,7 @@ async def upload_document(file: UploadFile = File(...)):
         chunks = splitter.split_text(full_text)
 
         for chunk in chunks:
+
             documents.append({
                 "text": chunk,
                 "metadata": {
@@ -80,6 +143,7 @@ async def upload_document(file: UploadFile = File(...)):
         chunks = splitter.split_text(text)
 
         for chunk in chunks:
+
             documents.append({
                 "text": chunk,
                 "metadata": {
@@ -89,15 +153,18 @@ async def upload_document(file: UploadFile = File(...)):
             })
 
     else:
+
         raise HTTPException(
             status_code=400,
             detail="Unsupported file type. Supported types: PDF, DOCX, TXT"
         )
 
+    stored_count = store_documents(documents)
+
     return {
         "filename": file.filename,
         "total_chunks": len(documents),
-        "documents": documents
+        "stored_in_qdrant": stored_count
     }
 
 
@@ -105,22 +172,30 @@ async def upload_document(file: UploadFile = File(...)):
 async def ingest_web_page(url: str = Form(...)):
 
     async with httpx.AsyncClient() as client:
+
         response = await client.get(url)
 
     response.raise_for_status()
 
-    soup = BeautifulSoup(response.text, "html.parser")
+    soup = BeautifulSoup(
+        response.text,
+        "html.parser"
+    )
 
     for element in soup(["script", "style", "noscript"]):
         element.decompose()
 
-    text = soup.get_text(separator="\n", strip=True)
+    text = soup.get_text(
+        separator="\n",
+        strip=True
+    )
 
     chunks = splitter.split_text(text)
 
     documents = []
 
     for chunk in chunks:
+
         documents.append({
             "text": chunk,
             "metadata": {
@@ -129,8 +204,10 @@ async def ingest_web_page(url: str = Form(...)):
             }
         })
 
+    stored_count = store_documents(documents)
+
     return {
         "url": url,
         "total_chunks": len(documents),
-        "documents": documents
+        "stored_in_qdrant": stored_count
     }
