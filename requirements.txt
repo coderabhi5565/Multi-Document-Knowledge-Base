@@ -1,3 +1,9 @@
 fastapi
 uvicorn
 PyPDF2
+python-docx
+qdrant-client
+llama-index
+llama-index-vector-stores-qdrant
+llama-index-embeddings-openai
+openai
